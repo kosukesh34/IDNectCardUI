@@ -103,6 +103,80 @@ IDNectCardView(
 )
 ```
 
+### Front Content Examples
+
+#### Membership Card
+```swift
+IDNectCardView(
+    data: data,
+    style: style,
+    frontContent: {
+        AnyView(
+            VStack(alignment: .leading, spacing: 10) {
+                HStack {
+                    Text("MEMBER")
+                        .font(.caption)
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 4)
+                        .background(Color.white.opacity(0.2))
+                        .clipShape(Capsule())
+                    Spacer()
+                    Text("GOLD").font(.caption2)
+                }
+                Text("Jane Doe").font(.title3).bold()
+                Text("ID: 1234-5678").font(.footnote)
+                Spacer()
+                Text("Valid thru 12/2027").font(.caption)
+            }
+            .padding(16)
+        )
+    }
+)
+```
+
+#### Game Card
+```swift
+IDNectCardView(
+    data: data,
+    style: style,
+    frontContent: {
+        AnyView(
+            VStack(alignment: .leading, spacing: 8) {
+                HStack {
+                    Image(systemName: "gamecontroller.fill")
+                    Text("Game Pass").font(.headline)
+                    Spacer()
+                    Text("Lv. 42").font(.caption)
+                }
+                Text("Player: @jane").font(.subheadline)
+                Text("Playtime: 148h").font(.footnote)
+                Spacer()
+                Text("Achievement: 87%").font(.caption)
+            }
+            .padding(16)
+        )
+    }
+)
+```
+
+### UIKit Usage
+```swift
+import UIKit
+import SwiftUI
+import IDNectCardUI
+
+let data = IDNectCardData(
+    userName: "Jane Doe",
+    userHandle: "@jane",
+    userId: "jane_id",
+    qrCodeString: "IDNect://user?id=uuid"
+)
+
+let cardView = IDNectCardView(data: data)
+let hostingController = UIHostingController(rootView: cardView)
+present(hostingController, animated: true)
+```
+
 ### Flat Back (No 3D Flip)
 ```swift
 let flatStyle = IDNectCardStyle(
@@ -304,6 +378,80 @@ IDNectCardView(
         )
     }
 )
+```
+
+### 表面サンプル
+
+#### 会員証
+```swift
+IDNectCardView(
+    data: data,
+    style: style,
+    frontContent: {
+        AnyView(
+            VStack(alignment: .leading, spacing: 10) {
+                HStack {
+                    Text("MEMBER")
+                        .font(.caption)
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 4)
+                        .background(Color.white.opacity(0.2))
+                        .clipShape(Capsule())
+                    Spacer()
+                    Text("GOLD").font(.caption2)
+                }
+                Text("Jane Doe").font(.title3).bold()
+                Text("ID: 1234-5678").font(.footnote)
+                Spacer()
+                Text("有効期限: 2027/12").font(.caption)
+            }
+            .padding(16)
+        )
+    }
+)
+```
+
+#### ゲームカード
+```swift
+IDNectCardView(
+    data: data,
+    style: style,
+    frontContent: {
+        AnyView(
+            VStack(alignment: .leading, spacing: 8) {
+                HStack {
+                    Image(systemName: "gamecontroller.fill")
+                    Text("Game Pass").font(.headline)
+                    Spacer()
+                    Text("Lv. 42").font(.caption)
+                }
+                Text("Player: @jane").font(.subheadline)
+                Text("プレイ時間: 148h").font(.footnote)
+                Spacer()
+                Text("達成率: 87%").font(.caption)
+            }
+            .padding(16)
+        )
+    }
+)
+```
+
+### UIKitでの利用
+```swift
+import UIKit
+import SwiftUI
+import IDNectCardUI
+
+let data = IDNectCardData(
+    userName: "Jane Doe",
+    userHandle: "@jane",
+    userId: "jane_id",
+    qrCodeString: "IDNect://user?id=uuid"
+)
+
+let cardView = IDNectCardView(data: data)
+let hostingController = UIHostingController(rootView: cardView)
+present(hostingController, animated: true)
 ```
 
 ### 3Dを使わない表示
