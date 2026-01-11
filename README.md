@@ -68,6 +68,24 @@ let data = IDNectCardData(
 )
 ```
 
+### Custom Back Content
+```swift
+IDNectCardView(
+    data: data,
+    style: style,
+    backContent: {
+        AnyView(
+            VStack(alignment: .leading, spacing: 8) {
+                Text("Member Card").font(.headline)
+                Text("ID: 1234-5678")
+                Text("Expires: 2027-12-31")
+            }
+            .padding(16)
+        )
+    }
+)
+```
+
 ### Customization
 You can customize:
 - Colors (`cardColor`, `textColor`, `codeForegroundColor`, `codeBackgroundColor`)
@@ -80,6 +98,7 @@ You can customize:
 - Profile link position (`profileLinkAlignment`, `profileLinkPadding`, `showProfileLink`)
 - Face backgrounds (`frontFaceBackgroundColor`, `backFaceBackgroundColor`)
 - Animations (`showsShimmer`, `shimmerDuration`, `allowsFlipAnimation`, `flipAnimationDuration`)
+- Back face visibility (`showsBackFace`)
 
 ---
 
@@ -149,6 +168,24 @@ let data = IDNectCardData(
 )
 ```
 
+### 裏面のカスタム表示
+```swift
+IDNectCardView(
+    data: data,
+    style: style,
+    backContent: {
+        AnyView(
+            VStack(alignment: .leading, spacing: 8) {
+                Text("会員証").font(.headline)
+                Text("ID: 1234-5678")
+                Text("有効期限: 2027-12-31")
+            }
+            .padding(16)
+        )
+    }
+)
+```
+
 ### カスタマイズ可能な項目
 - 色（`cardColor`, `textColor`, `codeForegroundColor`, `codeBackgroundColor`）
 - サイズ（`cardSize`, `qrSize`, `qrSmallSize`, `codeSize`, `codeSmallSize`）
@@ -160,6 +197,7 @@ let data = IDNectCardData(
 - URL表示位置（`profileLinkAlignment`, `profileLinkPadding`, `showProfileLink`）
 - 表裏背景（`frontFaceBackgroundColor`, `backFaceBackgroundColor`）
 - アニメーション（`showsShimmer`, `shimmerDuration`, `allowsFlipAnimation`, `flipAnimationDuration`）
+- 裏面の非表示（`showsBackFace`）
 
 ## License
 MIT

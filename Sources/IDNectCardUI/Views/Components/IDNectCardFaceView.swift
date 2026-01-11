@@ -6,19 +6,22 @@ struct IDNectCardFaceView: View {
     let style: IDNectCardStyle
     let showsQrEnlargeButton: Bool
     let onTapQrEnlarge: (() -> Void)?
+    let backContent: (() -> AnyView)?
 
     init(
         face: IDNectCardFace,
         data: IDNectCardData,
         style: IDNectCardStyle,
         showsQrEnlargeButton: Bool = false,
-        onTapQrEnlarge: (() -> Void)? = nil
+        onTapQrEnlarge: (() -> Void)? = nil,
+        backContent: (() -> AnyView)? = nil
     ) {
         self.face = face
         self.data = data
         self.style = style
         self.showsQrEnlargeButton = showsQrEnlargeButton
         self.onTapQrEnlarge = onTapQrEnlarge
+        self.backContent = backContent
     }
 
     var body: some View {
@@ -76,45 +79,50 @@ struct IDNectCardFaceView: View {
             RoundedRectangle(cornerRadius: style.cornerRadius)
                 .fill(style.backFaceBackgroundColor)
                 .frame(width: style.cardSize.width, height: style.cardSize.height)
-            HStack(spacing: 15) {
-                VStack(alignment: .leading, spacing: 8) {
-                    Text(data.userName)
-                        .font(style.userNameFont)
-                    Text("@\(data.userId)")
-                        .font(style.userIdFont)
+            if let backContent = backContent {
+                backContent()
+                    .frame(width: style.cardSize.width, height: style.cardSize.height)
+            } else {
+                HStack(spacing: 15) {
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text(data.userName)
+                            .font(style.userNameFont)
+                        Text("@\(data.userId)")
+                            .font(style.userIdFont)
+                        Spacer()
+                    }
+                    .foregroundColor(style.textColor)
+                    .shadow(color: style.textShadowColor.opacity(0.7), radius: style.textShadowRadius, x: style.textShadowOffset.width, y: style.textShadowOffset.height)
+
                     Spacer()
+                    IDNectCardGameListView(games: data.games, isLoading: data.isLoading, textColor: style.textColor, font: style.gameNameFont, size: style.gameListSize)
                 }
-                .foregroundColor(style.textColor)
-                .shadow(color: style.textShadowColor.opacity(0.7), radius: style.textShadowRadius, x: style.textShadowOffset.width, y: style.textShadowOffset.height)
+                .padding(12)
 
-                Spacer()
-                IDNectCardGameListView(games: data.games, isLoading: data.isLoading, textColor: style.textColor, font: style.gameNameFont, size: style.gameListSize)
-            }
-            .padding(12)
+                if style.showProfileLink {
+                    IDNectCardProfileLink(urlString: data.profileURL, textColor: style.textColor, font: style.profileLinkFont)
+                        .frame(maxWidth: .infinity, alignment: style.profileLinkAlignment)
+                        .padding(style.profileLinkPadding)
+                }
 
-            if style.showProfileLink {
-                IDNectCardProfileLink(urlString: data.profileURL, textColor: style.textColor, font: style.profileLinkFont)
-                    .frame(maxWidth: .infinity, alignment: style.profileLinkAlignment)
-                    .padding(style.profileLinkPadding)
-            }
-
-            HStack {
-                Spacer()
-                VStack {
+                HStack {
                     Spacer()
-                    IDNectCodeImage(
-                        code: data.qrCodeString,
-                        type: data.codeType,
-                        size: style.codeSmallSize,
-                        cornerRadius: style.codeCornerRadius,
-                        foregroundColor: style.codeForegroundColor,
-                        backgroundColor: style.codeBackgroundColor
-                    )
-                    .padding(.trailing, 10)
-                    .padding(.bottom, 10)
+                    VStack {
+                        Spacer()
+                        IDNectCodeImage(
+                            code: data.qrCodeString,
+                            type: data.codeType,
+                            size: style.codeSmallSize,
+                            cornerRadius: style.codeCornerRadius,
+                            foregroundColor: style.codeForegroundColor,
+                            backgroundColor: style.codeBackgroundColor
+                        )
+                        .padding(.trailing, 10)
+                        .padding(.bottom, 10)
+                    }
                 }
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing)
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing)
         }
         .frame(width: style.cardSize.width, height: style.cardSize.height)
     }
