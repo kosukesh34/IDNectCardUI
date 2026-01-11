@@ -32,6 +32,9 @@ struct IDNectCardFaceView: View {
 
     private var frontFace: some View {
         ZStack(alignment: .topLeading) {
+            RoundedRectangle(cornerRadius: style.cornerRadius)
+                .fill(style.frontFaceBackgroundColor)
+                .frame(width: style.cardSize.width, height: style.cardSize.height)
             VStack(spacing: 12) {
                 ZStack {
                     RoundedRectangle(cornerRadius: style.codeContainerCornerRadius)
@@ -70,6 +73,9 @@ struct IDNectCardFaceView: View {
 
     private var backFace: some View {
         ZStack(alignment: .bottomLeading) {
+            RoundedRectangle(cornerRadius: style.cornerRadius)
+                .fill(style.backFaceBackgroundColor)
+                .frame(width: style.cardSize.width, height: style.cardSize.height)
             HStack(spacing: 15) {
                 VStack(alignment: .leading, spacing: 8) {
                     Text(data.userName)
@@ -87,12 +93,9 @@ struct IDNectCardFaceView: View {
             .padding(12)
 
             if style.showProfileLink {
-                HStack {
-                    IDNectCardProfileLink(urlString: data.profileURL, textColor: style.textColor, font: style.profileLinkFont)
-                    Spacer()
-                }
-                .padding(.horizontal, 12)
-                .padding(.bottom, 8)
+                IDNectCardProfileLink(urlString: data.profileURL, textColor: style.textColor, font: style.profileLinkFont)
+                    .frame(maxWidth: .infinity, alignment: style.profileLinkAlignment)
+                    .padding(style.profileLinkPadding)
             }
 
             HStack {

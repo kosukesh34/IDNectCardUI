@@ -6,38 +6,40 @@ public enum IDNectCardFace {
 }
 
 public struct IDNectCardView: View {
-    @Binding private var isFlipped: Bool
-
     private let data: IDNectCardData
     private let style: IDNectCardStyle
     private let showsQrEnlargeButton: Bool
     private let onTapQrEnlarge: (() -> Void)?
     private let onFlip: ((Bool) -> Void)?
+    private let externalFlipBinding: Binding<Bool>?
 
+    @State private var internalFlipped: Bool
     @State private var rotation: Double
     @State private var shimmerProgress: CGFloat = -1.5
 
     public init(
         data: IDNectCardData,
         style: IDNectCardStyle = IDNectCardStyle(),
-        isFlipped: Binding<Bool> = .constant(false),
+        isFlipped: Binding<Bool>? = nil,
         showsQrEnlargeButton: Bool = false,
         onTapQrEnlarge: (() -> Void)? = nil,
         onFlip: ((Bool) -> Void)? = nil
     ) {
         self.data = data
         self.style = style
-        self._isFlipped = isFlipped
+        self.externalFlipBinding = isFlipped
         self.showsQrEnlargeButton = showsQrEnlargeButton
         self.onTapQrEnlarge = onTapQrEnlarge
         self.onFlip = onFlip
-        self._rotation = State(initialValue: isFlipped.wrappedValue ? 180 : 0)
+        let initialFlipped = isFlipped?.wrappedValue ?? false
+        self._internalFlipped = State(initialValue: initialFlipped)
+        self._rotation = State(initialValue: initialFlipped ? 180 : 0)
     }
 
     public var body: some View {
         ZStack {
             IDNectCardBackgroundView(style: style, shimmerProgress: $shimmerProgress)
-            if data.showsLogo && !isFlipped {
+            if data.showsLogo && !isFlippedValue {
                 IDNectCardLogoView(logo: data.logo, style: style)
             }
             ZStack {
@@ -59,6 +61,7 @@ public struct IDNectCardView: View {
         }
         .frame(width: style.cardSize.width, height: style.cardSize.height)
         .rotation3DEffect(.degrees(rotation), axis: (x: 0, y: 1, z: 0), perspective: 0.3)
+        .contentShape(Rectangle())
         .onTapGesture { handleFlipTap() }
         .onAppear { startShimmerAnimationIfNeeded() }
         .onChange(of: style.showsShimmer) { newValue in
@@ -68,10 +71,14 @@ public struct IDNectCardView: View {
                 shimmerProgress = -1.5
             }
         }
-        .onChange(of: isFlipped) { newValue in
+        .onChange(of: isFlippedValue) { newValue in
             let targetRotation = newValue ? 180.0 : 0.0
             if rotation != targetRotation {
-                withAnimation(.easeInOut(duration: 0.6)) {
+                if style.allowsFlipAnimation {
+                    withAnimation(.easeInOut(duration: style.flipAnimationDuration)) {
+                        rotation = targetRotation
+                    }
+                } else {
                     rotation = targetRotation
                 }
             }
@@ -84,12 +91,29 @@ public struct IDNectCardView: View {
     }
 
     private func handleFlipTap() {
-        let newValue = !isFlipped
-        withAnimation(.easeInOut(duration: 0.6)) {
+        let newValue = !isFlippedValue
+        if style.allowsFlipAnimation {
+            withAnimation(.easeInOut(duration: style.flipAnimationDuration)) {
+                rotation = newValue ? 180 : 0
+                setIsFlipped(newValue)
+            }
+        } else {
             rotation = newValue ? 180 : 0
-            isFlipped = newValue
+            setIsFlipped(newValue)
         }
         onFlip?(newValue)
+    }
+
+    private var isFlippedValue: Bool {
+        externalFlipBinding?.wrappedValue ?? internalFlipped
+    }
+
+    private func setIsFlipped(_ newValue: Bool) {
+        if let binding = externalFlipBinding {
+            binding.wrappedValue = newValue
+        } else {
+            internalFlipped = newValue
+        }
     }
 
     private func startShimmerAnimationIfNeeded() {

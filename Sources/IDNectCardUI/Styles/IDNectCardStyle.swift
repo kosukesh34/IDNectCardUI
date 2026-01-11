@@ -42,6 +42,12 @@ public struct IDNectCardStyle {
     public var userIdFont: Font
     public var gameNameFont: Font
     public var profileLinkFont: Font
+    public var profileLinkPadding: EdgeInsets
+    public var profileLinkAlignment: Alignment
+    public var frontFaceBackgroundColor: Color
+    public var backFaceBackgroundColor: Color
+    public var allowsFlipAnimation: Bool
+    public var flipAnimationDuration: Double
     public var showsShimmer: Bool
     public var shimmerDuration: Double
 
@@ -87,6 +93,12 @@ public struct IDNectCardStyle {
         userIdFont: Font = .system(size: 12, weight: .regular),
         gameNameFont: Font = .system(size: 12, weight: .medium),
         profileLinkFont: Font = .system(size: 10, weight: .regular),
+        profileLinkPadding: EdgeInsets = EdgeInsets(top: 0, leading: 12, bottom: 8, trailing: 12),
+        profileLinkAlignment: Alignment = .leading,
+        frontFaceBackgroundColor: Color = Color.black.opacity(0.15),
+        backFaceBackgroundColor: Color = Color.black.opacity(0.15),
+        allowsFlipAnimation: Bool = true,
+        flipAnimationDuration: Double = 0.6,
         showsShimmer: Bool = true,
         shimmerDuration: Double = 5.0
     ) {
@@ -142,6 +154,12 @@ public struct IDNectCardStyle {
         self.userIdFont = userIdFont
         self.gameNameFont = gameNameFont
         self.profileLinkFont = profileLinkFont
+        self.profileLinkPadding = profileLinkPadding
+        self.profileLinkAlignment = profileLinkAlignment
+        self.frontFaceBackgroundColor = frontFaceBackgroundColor
+        self.backFaceBackgroundColor = backFaceBackgroundColor
+        self.allowsFlipAnimation = allowsFlipAnimation
+        self.flipAnimationDuration = flipAnimationDuration
         self.showsShimmer = showsShimmer
         self.shimmerDuration = shimmerDuration
     }
