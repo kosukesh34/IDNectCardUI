@@ -6,6 +6,7 @@ struct IDNectCardFaceView: View {
     let style: IDNectCardStyle
     let showsQrEnlargeButton: Bool
     let onTapQrEnlarge: (() -> Void)?
+    let frontContent: (() -> AnyView)?
     let backContent: (() -> AnyView)?
 
     init(
@@ -14,6 +15,7 @@ struct IDNectCardFaceView: View {
         style: IDNectCardStyle,
         showsQrEnlargeButton: Bool = false,
         onTapQrEnlarge: (() -> Void)? = nil,
+        frontContent: (() -> AnyView)? = nil,
         backContent: (() -> AnyView)? = nil
     ) {
         self.face = face
@@ -21,6 +23,7 @@ struct IDNectCardFaceView: View {
         self.style = style
         self.showsQrEnlargeButton = showsQrEnlargeButton
         self.onTapQrEnlarge = onTapQrEnlarge
+        self.frontContent = frontContent
         self.backContent = backContent
     }
 
@@ -38,30 +41,35 @@ struct IDNectCardFaceView: View {
             RoundedRectangle(cornerRadius: style.cornerRadius)
                 .fill(style.frontFaceBackgroundColor)
                 .frame(width: style.cardSize.width, height: style.cardSize.height)
-            VStack(spacing: 12) {
-                ZStack {
-                    RoundedRectangle(cornerRadius: style.codeContainerCornerRadius)
-                        .fill(style.codeContainerColor)
-                        .frame(width: style.codeContainerSize.width, height: style.codeContainerSize.height)
-                        .shadow(color: style.codeContainerShadowColor, radius: style.codeContainerShadowRadius, x: style.codeContainerShadowOffset.width, y: style.codeContainerShadowOffset.height)
-                    IDNectCodeImage(
-                        code: data.qrCodeString,
-                        type: data.codeType,
-                        size: style.codeSize,
-                        cornerRadius: style.codeCornerRadius,
-                        foregroundColor: style.codeForegroundColor,
-                        backgroundColor: style.codeBackgroundColor
-                    )
-                }
-                .padding(.top, 15)
+            if let frontContent = frontContent {
+                frontContent()
+                    .frame(width: style.cardSize.width, height: style.cardSize.height)
+            } else {
+                VStack(spacing: 12) {
+                    ZStack {
+                        RoundedRectangle(cornerRadius: style.codeContainerCornerRadius)
+                            .fill(style.codeContainerColor)
+                            .frame(width: style.codeContainerSize.width, height: style.codeContainerSize.height)
+                            .shadow(color: style.codeContainerShadowColor, radius: style.codeContainerShadowRadius, x: style.codeContainerShadowOffset.width, y: style.codeContainerShadowOffset.height)
+                        IDNectCodeImage(
+                            code: data.qrCodeString,
+                            type: data.codeType,
+                            size: style.codeSize,
+                            cornerRadius: style.codeCornerRadius,
+                            foregroundColor: style.codeForegroundColor,
+                            backgroundColor: style.codeBackgroundColor
+                        )
+                    }
+                    .padding(.top, 15)
 
-                Text(data.userHandle)
-                    .font(style.userHandleFont)
-                    .foregroundColor(style.textColor)
-                    .shadow(color: style.textShadowColor, radius: style.textShadowRadius, x: style.textShadowOffset.width, y: style.textShadowOffset.height)
-                    .padding(.bottom, 15)
+                    Text(data.userHandle)
+                        .font(style.userHandleFont)
+                        .foregroundColor(style.textColor)
+                        .shadow(color: style.textShadowColor, radius: style.textShadowRadius, x: style.textShadowOffset.width, y: style.textShadowOffset.height)
+                        .padding(.bottom, 15)
+                }
+                .frame(width: style.cardSize.width, height: style.cardSize.height)
             }
-            .frame(width: style.cardSize.width, height: style.cardSize.height)
 
             if showsQrEnlargeButton {
                 Button(action: { onTapQrEnlarge?() }) {

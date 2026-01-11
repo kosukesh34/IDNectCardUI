@@ -86,6 +86,31 @@ IDNectCardView(
 )
 ```
 
+### Front Content (Frame Only)
+```swift
+IDNectCardView(
+    data: data,
+    style: style,
+    frontContent: {
+        AnyView(
+            VStack(alignment: .leading, spacing: 8) {
+                Text("Write anything here")
+                Text("This replaces the default front layout.")
+            }
+            .padding(16)
+        )
+    }
+)
+```
+
+### Flat Back (No 3D Flip)
+```swift
+let flatStyle = IDNectCardStyle(
+    uses3DFlip: false,
+    allowsFlipAnimation: false
+)
+```
+
 ### Back Content Examples
 
 #### Business Card
@@ -175,7 +200,7 @@ You can customize:
 - Logo (`logo`, `showsLogo`, `logoSize`, `logoPadding`)
 - Profile link position (`profileLinkAlignment`, `profileLinkPadding`, `showProfileLink`)
 - Face backgrounds (`frontFaceBackgroundColor`, `backFaceBackgroundColor`)
-- Animations (`showsShimmer`, `shimmerDuration`, `allowsFlipAnimation`, `flipAnimationDuration`)
+- Animations (`showsShimmer`, `shimmerDuration`, `allowsFlipAnimation`, `flipAnimationDuration`, `uses3DFlip`)
 - Back face visibility (`showsBackFace`)
 
 ---
@@ -261,6 +286,31 @@ IDNectCardView(
             .padding(16)
         )
     }
+)
+```
+
+### 表面のカスタム表示（枠だけ使う）
+```swift
+IDNectCardView(
+    data: data,
+    style: style,
+    frontContent: {
+        AnyView(
+            VStack(alignment: .leading, spacing: 8) {
+                Text("ここに自由に記入できます")
+                Text("デフォルトの表面レイアウトを置き換えます。")
+            }
+            .padding(16)
+        )
+    }
+)
+```
+
+### 3Dを使わない表示
+```swift
+let flatStyle = IDNectCardStyle(
+    uses3DFlip: false,
+    allowsFlipAnimation: false
 )
 ```
 
@@ -352,7 +402,7 @@ IDNectCardView(
 - ロゴ（`logo`, `showsLogo`, `logoSize`, `logoPadding`）
 - URL表示位置（`profileLinkAlignment`, `profileLinkPadding`, `showProfileLink`）
 - 表裏背景（`frontFaceBackgroundColor`, `backFaceBackgroundColor`）
-- アニメーション（`showsShimmer`, `shimmerDuration`, `allowsFlipAnimation`, `flipAnimationDuration`）
+- アニメーション（`showsShimmer`, `shimmerDuration`, `allowsFlipAnimation`, `flipAnimationDuration`, `uses3DFlip`）
 - 裏面の非表示（`showsBackFace`）
 
 ## License

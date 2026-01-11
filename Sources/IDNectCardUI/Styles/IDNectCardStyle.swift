@@ -47,6 +47,7 @@ public struct IDNectCardStyle {
     public var frontFaceBackgroundColor: Color
     public var backFaceBackgroundColor: Color
     public var showsBackFace: Bool
+    public var uses3DFlip: Bool
     public var allowsFlipAnimation: Bool
     public var flipAnimationDuration: Double
     public var showsShimmer: Bool
@@ -99,6 +100,7 @@ public struct IDNectCardStyle {
         frontFaceBackgroundColor: Color = Color.black.opacity(0.15),
         backFaceBackgroundColor: Color = Color.black.opacity(0.15),
         showsBackFace: Bool = true,
+        uses3DFlip: Bool = true,
         allowsFlipAnimation: Bool = true,
         flipAnimationDuration: Double = 0.6,
         showsShimmer: Bool = true,
@@ -161,6 +163,7 @@ public struct IDNectCardStyle {
         self.frontFaceBackgroundColor = frontFaceBackgroundColor
         self.backFaceBackgroundColor = backFaceBackgroundColor
         self.showsBackFace = showsBackFace
+        self.uses3DFlip = uses3DFlip
         self.allowsFlipAnimation = allowsFlipAnimation
         self.flipAnimationDuration = flipAnimationDuration
         self.showsShimmer = showsShimmer

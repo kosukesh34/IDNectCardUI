@@ -12,6 +12,7 @@ public struct IDNectCardView: View {
     private let onTapQrEnlarge: (() -> Void)?
     private let onFlip: ((Bool) -> Void)?
     private let externalFlipBinding: Binding<Bool>?
+    private let frontContent: (() -> AnyView)?
     private let backContent: (() -> AnyView)?
 
     @State private var internalFlipped: Bool
@@ -25,6 +26,7 @@ public struct IDNectCardView: View {
         showsQrEnlargeButton: Bool = false,
         onTapQrEnlarge: (() -> Void)? = nil,
         onFlip: ((Bool) -> Void)? = nil,
+        frontContent: (() -> AnyView)? = nil,
         backContent: (() -> AnyView)? = nil
     ) {
         self.data = data
@@ -33,6 +35,7 @@ public struct IDNectCardView: View {
         self.showsQrEnlargeButton = showsQrEnlargeButton
         self.onTapQrEnlarge = onTapQrEnlarge
         self.onFlip = onFlip
+        self.frontContent = frontContent
         self.backContent = backContent
         let initialFlipped = isFlipped?.wrappedValue ?? false
         self._internalFlipped = State(initialValue: initialFlipped)
@@ -51,19 +54,24 @@ public struct IDNectCardView: View {
                     data: data,
                     style: style,
                     showsQrEnlargeButton: showsQrEnlargeButton,
-                    onTapQrEnlarge: onTapQrEnlarge
+                    onTapQrEnlarge: onTapQrEnlarge,
+                    frontContent: frontContent
                 )
                 .opacity(isFrontVisible ? 1 : 0)
 
                 IDNectCardFaceView(face: .back, data: data, style: style, backContent: backContent)
-                    .scaleEffect(x: -1, y: 1)
+                    .scaleEffect(x: style.uses3DFlip ? -1 : 1, y: 1)
                     .opacity(isFrontVisible ? 0 : 1)
             }
             .frame(width: style.cardSize.width, height: style.cardSize.height)
             .clipped()
         }
         .frame(width: style.cardSize.width, height: style.cardSize.height)
-        .rotation3DEffect(.degrees(rotation), axis: (x: 0, y: 1, z: 0), perspective: 0.3)
+        .rotation3DEffect(
+            .degrees(style.uses3DFlip ? rotation : 0),
+            axis: (x: 0, y: 1, z: 0),
+            perspective: 0.3
+        )
         .contentShape(Rectangle())
         .onTapGesture { handleFlipTap() }
         .onAppear { startShimmerAnimationIfNeeded() }
@@ -138,6 +146,7 @@ public struct IDNectCardSnapshotView: View {
     private let data: IDNectCardData
     private let style: IDNectCardStyle
     private let backContent: (() -> AnyView)?
+    private let frontContent: (() -> AnyView)?
 
     @State private var shimmerProgress: CGFloat = -1.5
 
@@ -145,12 +154,14 @@ public struct IDNectCardSnapshotView: View {
         face: IDNectCardFace,
         data: IDNectCardData,
         style: IDNectCardStyle = IDNectCardStyle(),
-        backContent: (() -> AnyView)? = nil
+        backContent: (() -> AnyView)? = nil,
+        frontContent: (() -> AnyView)? = nil
     ) {
         self.face = face
         self.data = data
         self.style = style
         self.backContent = backContent
+        self.frontContent = frontContent
     }
 
     public var body: some View {
@@ -159,7 +170,7 @@ public struct IDNectCardSnapshotView: View {
             if face == .front && data.showsLogo {
                 IDNectCardLogoView(logo: data.logo, style: style)
             }
-            IDNectCardFaceView(face: face, data: data, style: style, backContent: backContent)
+            IDNectCardFaceView(face: face, data: data, style: style, frontContent: frontContent, backContent: backContent)
         }
         .frame(width: style.cardSize.width, height: style.cardSize.height)
         .onAppear { startShimmerAnimationIfNeeded() }
