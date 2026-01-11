@@ -86,6 +86,84 @@ IDNectCardView(
 )
 ```
 
+### Back Content Examples
+
+#### Business Card
+```swift
+IDNectCardView(
+    data: data,
+    style: style,
+    backContent: {
+        AnyView(
+            VStack(alignment: .leading, spacing: 8) {
+                Text("Jane Doe").font(.title2).bold()
+                Text("Product Designer").font(.subheadline)
+                Divider()
+                Text("jane@example.com")
+                Text("+1 555-123-4567")
+                Text("San Francisco, CA")
+            }
+            .padding(16)
+        )
+    }
+)
+```
+
+#### Self Introduction
+```swift
+IDNectCardView(
+    data: data,
+    style: style,
+    backContent: {
+        AnyView(
+            VStack(alignment: .leading, spacing: 10) {
+                Text("Hi! I'm Jane.").font(.headline)
+                Text("I love indie games and UI design.").font(.subheadline)
+                Text("Favorite titles: Hades, Hollow Knight").font(.footnote)
+                Text("Let's connect!").font(.callout)
+            }
+            .padding(16)
+        )
+    }
+)
+```
+
+#### Credit Card Style
+```swift
+let creditStyle = IDNectCardStyle(
+    cardColor: .black,
+    textColor: .white,
+    cornerRadius: 20,
+    showsShimmer: false,
+    frontFaceBackgroundColor: .black,
+    backFaceBackgroundColor: .black
+)
+
+IDNectCardView(
+    data: data,
+    style: creditStyle,
+    backContent: {
+        AnyView(
+            VStack(alignment: .leading, spacing: 12) {
+                RoundedRectangle(cornerRadius: 6)
+                    .fill(Color.white.opacity(0.8))
+                    .frame(height: 32)
+                HStack {
+                    Text("1234 5678 9012 3456").font(.headline)
+                    Spacer()
+                }
+                HStack {
+                    Text("JANE DOE").font(.subheadline)
+                    Spacer()
+                    Text("12/27").font(.subheadline)
+                }
+            }
+            .padding(16)
+        )
+    }
+)
+```
+
 ### Customization
 You can customize:
 - Colors (`cardColor`, `textColor`, `codeForegroundColor`, `codeBackgroundColor`)
@@ -179,6 +257,84 @@ IDNectCardView(
                 Text("会員証").font(.headline)
                 Text("ID: 1234-5678")
                 Text("有効期限: 2027-12-31")
+            }
+            .padding(16)
+        )
+    }
+)
+```
+
+### 裏面サンプル
+
+#### 名刺
+```swift
+IDNectCardView(
+    data: data,
+    style: style,
+    backContent: {
+        AnyView(
+            VStack(alignment: .leading, spacing: 8) {
+                Text("Jane Doe").font(.title2).bold()
+                Text("プロダクトデザイナー").font(.subheadline)
+                Divider()
+                Text("jane@example.com")
+                Text("+1 555-123-4567")
+                Text("San Francisco, CA")
+            }
+            .padding(16)
+        )
+    }
+)
+```
+
+#### 自己紹介
+```swift
+IDNectCardView(
+    data: data,
+    style: style,
+    backContent: {
+        AnyView(
+            VStack(alignment: .leading, spacing: 10) {
+                Text("はじめまして、Janeです。").font(.headline)
+                Text("インディーゲームとUIデザインが好きです。").font(.subheadline)
+                Text("好きなタイトル: Hades, Hollow Knight").font(.footnote)
+                Text("ぜひ繋がりましょう！").font(.callout)
+            }
+            .padding(16)
+        )
+    }
+)
+```
+
+#### クレジットカード風
+```swift
+let creditStyle = IDNectCardStyle(
+    cardColor: .black,
+    textColor: .white,
+    cornerRadius: 20,
+    showsShimmer: false,
+    frontFaceBackgroundColor: .black,
+    backFaceBackgroundColor: .black
+)
+
+IDNectCardView(
+    data: data,
+    style: creditStyle,
+    backContent: {
+        AnyView(
+            VStack(alignment: .leading, spacing: 12) {
+                RoundedRectangle(cornerRadius: 6)
+                    .fill(Color.white.opacity(0.8))
+                    .frame(height: 32)
+                HStack {
+                    Text("1234 5678 9012 3456").font(.headline)
+                    Spacer()
+                }
+                HStack {
+                    Text("JANE DOE").font(.subheadline)
+                    Spacer()
+                    Text("12/27").font(.subheadline)
+                }
             }
             .padding(16)
         )
